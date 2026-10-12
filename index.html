@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>R&amp;D tasting panel</title><meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#14131F; --s1:#1C1B28; --s2:#242331; --line:#434149; --tx:#FFFFFF; --mu:#ADABB8;
+  --cy:#4EFEFF; --pk:#F32795; --hz:#EB280D;
+  --hd:'Barlow Semi Condensed','Arial Narrow',Arial,sans-serif;
+  --bd:'Roboto Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root:not([data-theme="light"]), :root[data-theme="dark"]{ --bg:#14131F; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 14px/1.6 var(--bd);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--hd);font-weight:600;text-transform:uppercase;letter-spacing:.02em;line-height:1.05;margin:0}
+h1{font-size:clamp(34px,7vw,56px)}
+h2{font-size:28px;margin-bottom:6px}
+h3{font-size:20px}
+p{margin:0 0 12px;max-width:68ch}
+a{color:var(--cy)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 80px}
+
+/* header */
+header{padding:32px 0 20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.mark{font-family:var(--hd);font-weight:600;color:var(--hz);font-size:16px;letter-spacing:.04em}
+.sub{color:var(--mu);margin-top:8px}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-top:22px}
+nav button{background:none;border:1px solid var(--line);padding:7px 14px;border-radius:20px;color:var(--mu)}
+nav button[aria-current="page"]{border-color:var(--cy);color:var(--tx);box-shadow:0 0 12px rgba(78,254,255,.25)}
+
+/* blocks */
+.step{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+.step .num{font-family:var(--hd);font-size:34px;color:var(--cy);line-height:1}
+.step .meta{color:var(--mu);font-size:13px;margin:4px 0 14px}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.tile{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--line);border-radius:10px;padding:10px 14px;text-align:left;min-height:46px}
+.tile:hover{border-color:var(--mu)}
+.tile.done{opacity:.55}
+.tile .sc{margin-left:6px;font-size:12px;color:var(--cy)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 8px currentColor}
+.pairdots{display:flex}
+.pairdots .dot+.dot{margin-left:-4px}
+.btn{background:var(--cy);color:#0A0A12;border:0;border-radius:24px;padding:11px 22px;font-weight:500}
+.btn.ghost{background:none;color:var(--tx);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.banner{border:1px solid var(--pk);border-radius:10px;padding:12px 16px;margin-bottom:20px;color:#FFD3EA}
+.muted{color:var(--mu)}
+.prog{display:flex;gap:28px;flex-wrap:wrap;margin:6px 0 4px}
+.prog b{font-family:var(--hd);font-size:30px;font-weight:600;display:block;line-height:1}
+.prog span{color:var(--mu);font-size:12px}
+
+/* form */
+.form{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:22px}
+.q{padding:16px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.ql{display:block;margin-bottom:10px}
+.ql .req{color:var(--pk);margin-left:4px}
+.ql small{display:block;color:var(--mu)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chip span{display:inline-block;min-width:40px;text-align:center;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--s2)}
+.chip input:checked+span{border-color:var(--cy);background:rgba(78,254,255,.14);color:#fff}
+.chip input:focus-visible+span{outline:2px solid var(--cy);outline-offset:2px}
+.ends{display:flex;justify-content:space-between;color:var(--mu);font-size:12px;margin-top:6px;max-width:460px}
+input[type=text],input[type=password],textarea,select{width:100%;background:var(--s2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:10px 12px;font:inherit}
+textarea{min-height:80px;resize:vertical}
+.formhead{display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;align-items:center}
+.err{color:#FF9DB0;font-size:13px}
+.ok{color:var(--cy)}
+
+/* matrix — the hero */
+.mxwrap{overflow-x:auto;padding-bottom:8px}
+table.mx{border-collapse:separate;border-spacing:3px;margin:8px 0}
+.mx th{font-weight:400;font-size:11px;color:var(--mu);padding:2px 4px;white-space:nowrap}
+.mx th.col{writing-mode:vertical-rl;transform:rotate(180deg);height:104px;text-align:left}
+.mx th.row{text-align:right}
+.mx td{width:44px;height:44px;padding:0}
+.mx td button{width:100%;height:100%;border:1px solid var(--line);border-radius:6px;background:var(--s1);font-size:12px}
+.mx td button.anchor{border-color:var(--pk)}
+.mx td button.single{background:transparent;border-style:dashed}
+.mx td.empty{background:none}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--mu);font-size:12px;margin-top:8px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;border:1px solid var(--line)}
+
+/* how to */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+.ctrl{display:grid;grid-template-columns:96px 1fr;gap:4px 14px;margin:0 0 6px}
+.ctrl dt{font-family:var(--hd);font-size:20px;font-weight:600;color:var(--cy)}
+.ctrl dd{margin:0 0 10px}
+ol.plain{padding-left:20px;margin:0}
+ol.plain li{margin-bottom:8px}
+
+/* results */
+table.rt{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 24px}
+.rt th{text-align:left;font-weight:500;color:var(--mu);border-bottom:1px solid var(--line);padding:6px 8px}
+.rt td{border-bottom:1px solid #2c2b38;padding:7px 8px;vertical-align:top}
+.rt td.n{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--cy);border-radius:3px;box-shadow:0 0 6px rgba(78,254,255,.5)}
+.rsec{margin:30px 0}
+.tbl{overflow-x:auto}
+@media (max-width:600px){.step{grid-template-columns:1fr}.step .num{font-size:26px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.gate{max-width:440px;margin:40px 0}
+.gate input{font-size:18px;letter-spacing:.08em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark" id="mark">R&amp;D</div>
+    <h1 id="ttl">Tasting panel</h1>
+    <p class="sub" id="intro"></p>
+    <nav id="nav"></nav>
+  </header>
+  <main id="main"><p class="muted">Loading…</p></main>
+</div>
+<script>
+const SB='https://fsvscpaeckmwltabjrei.supabase.co/rest/v1/rpc/';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzdnNjcGFlY2ttd2x0YWJqcmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NjE3OTEsImV4cCI6MjA2OTAzNzc5MX0.Ut9wnpqDlXn9do0DVC0F5R0kf5OmnqWX0Sslm-f05jQ';
+const LS='rd_tasting_token';
+async function rpc(fn,args){
+  const r=await fetch(SB+fn,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify(args)});
+  const t=await r.text();let j;try{j=JSON.parse(t)}catch(e){j=t}
+  if(!r.ok){const e=new Error((j&&j.message)||'request failed');e.status=r.status;e.code=j&&j.code;throw e}
+  return j;
+}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+
+let F=[],FM={},PAIRS=[],ANCHORS=[];
+const key=(a,b)=>[a,b].sort().join('+');
+const BLEND_TARGET=8;
+const VOLTS=['3.0V','3.2V','3.4V','3.6V'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nm=id=>FM[id]?FM[id].n:id;
+const pairName=k=>k.split('+').map(nm).join(' + ');
+const dots=ids=>'<span class="pairdots">'+ids.map(id=>`<span class="dot" style="color:${FM[id]?FM[id].c:'#888'};background:${FM[id]?FM[id].c:'#888'}"></span>`).join('')+'</span>';
+function applyPayload(p){
+  S.payload=p;F=p.flavors;FM=Object.fromEntries(F.map(f=>[f.id,f]));ANCHORS=p.anchors;
+  PAIRS=[];for(let i=0;i<F.length;i++)for(let j=i+1;j<F.length;j++)PAIRS.push(key(F[i].id,F[j].id));
+  document.getElementById('mark').textContent=p.mark||'';
+  document.getElementById('ttl').innerHTML=p.title||'Tasting panel';
+  document.getElementById('intro').textContent=p.intro||'';
+}
+
+const S={mode:'boot',token:store.get(LS),payload:null,code:null,me:null,scores:[],coverage:{},testers:0,hw:null,
+  view:'list',form:null,msg:null,problem:null,admin:null,adminData:null};
+
+/* ---------- questions ---------- */
+const scale=(k,t,lo,hi,o)=>({k,t,o:o||[1,2,3,4,5],lo,hi});
+const COMMON_TOP=[
+  {k:'palate',t:'Palate going in',o:['Clean','Ate or drank recently','Had another flavor in the last 15 min'],req:1},
+  {k:'voltage',t:'Voltage you used',o:VOLTS,req:1,help:'Start at 3.0V. Step up only if the hit is thin.'},
+  {k:'preheat',t:'Did you preheat first?',o:['Yes','No']}
+];
+const TASTE=[
+  scale('accuracy','Does it taste like what it says?','Not at all','Spot on'),
+  scale('intensity','Flavor strength','Faint','Overpowering'),
+  scale('sweetness','Sweetness','Flat','Cloying'),
+  scale('harsh','Throat feel','Silky','Harsh'),
+  scale('after','Aftertaste','Unpleasant','Clean and pleasant'),
+  {k:'terp',t:'Terpene level',o:['Way too little','A bit low','Right','A bit high','Way too much'],req:1,help:'How loud the terpenes are, separate from whether you like the flavor.'},
+  scale('natural','Fruit character','Candy / artificial','Real fruit')
+];
+const ISSUES={k:'issues',t:'Any hardware trouble this session?',multi:1,o:['None','Clogged','Leaked','Burnt taste','Weak or no vapor','Cart loose in base','Battery died']};
+const OVERALL={k:'overall',t:'Overall',o:[1,2,3,4,5,6,7,8,9,10],lo:'Would not finish it',hi:'Would buy today',req:1};
+const SINGLE_Q=[...COMMON_TOP,...TASTE,OVERALL,
+  {k:'buy',t:'Would you buy this flavor on its own?',o:['Yes','Maybe','No'],req:1},
+  {k:'pairIdea',t:'What would you blend it with?',text:1},
+  ISSUES,{k:'notes',t:'Anything else',area:1}];
+function blendQ(a,b){
+  return [...COMMON_TOP.map(q=>q.k==='voltage'?{...q,help:'Both carts fire at the same voltage in dual mode.'}:q),...TASTE,
+    {k:'lead',t:'Which flavor comes through more?',o:[`${nm(a)}, by a lot`,`${nm(a)}, a little`,'Even',`${nm(b)}, a little`,`${nm(b)}, by a lot`],vals:[-2,-1,0,1,2],req:1},
+    scale('harmony','Do they work together?','They fight','A new third flavor'),
+    OVERALL,
+    {k:'buy',t:'Would you buy this pair to blend?',o:['Yes','Maybe','No'],req:1},
+    {k:'blendName',t:'Name this blend',text:1,help:'Optional. The best names might end up on a pairing chart.'},
+    ISSUES,{k:'notes',t:'Anything else',area:1}];
+}
+const HW_Q=[
+  {sec:'Figuring it out'},
+  {k:'toggle',t:'The mode switch on the bottom — did you find it?',o:['Found it on my own','Needed the instructions','Still not sure'],req:1},
+  {k:'clicks',t:'Did 5 / 3 / 2 clicks work as described?',o:['Yes','Mostly','No']},
+  {k:'clicksNote',t:'If not, what happened?',text:1},
+  {k:'preheatUse',t:'Did you end up using preheat?',o:['Every time','Sometimes','Never','Didn\u2019t know it existed']},
+  {k:'voltPref',t:'Voltage you settled on',o:VOLTS,req:1},
+  {sec:'Using it'},
+  {k:'draw',t:'Draw resistance',o:['Too tight','Right','Too airy'],req:1},
+  {k:'clog',t:'Clogging',o:['Never','Once or twice','Often'],req:1},
+  {k:'leak',t:'Leaking at the base',o:['None','A little','Significant'],req:1},
+  {k:'heat',t:'Mouthpiece temperature',o:['Cool','Warm','Too hot']},
+  {k:'seat',t:'Carts in the base',o:['Always seated','Occasionally loose','Came loose']},
+  {k:'blendFeel',t:'Dual mode vs. one cart — did both carts seem to fire evenly?',o:['Even','One felt weaker','Couldn\u2019t tell']},
+  {k:'battery',t:'How long did a charge last you?',o:['Under a day','1–2 days','3–4 days','5+ days'],req:1},
+  scale('display','Display — easy to read?','Confusing','Clear'),
+  {sec:'Carrying it'},
+  scale('discreet','Discretion in a pocket or bag','Obvious','Unnoticeable'),
+  scale('feel','How it feels in the hand','Awkward','Great'),
+  {k:'daily',t:'Would you carry this as your everyday device?',o:['Yes','Maybe','No'],req:1},
+  {sec:'Stickers'},
+  {k:'stickUsed',t:'Did you label your carts with the flavor stickers?',o:['Every time','Sometimes','Never'],req:1},
+  scale('stickHold','Did they stay on?','Fell off','Rock solid'),
+  {k:'stickMove',t:'Moving a sticker to swap flavors',o:['Came off clean','Left residue','Tore','Didn\u2019t try']},
+  {sec:'Price and the big picture'},
+  {k:'priceCart',t:'What would you pay at a dispensary for one cart?',o:['$15','$20','$25','$30','$35+'],req:1},
+  {k:'priceDevice',t:'What would you pay for the device itself?',o:['Only if free','$10','$20','$30','$40+'],req:1},
+  {k:'setDeal',t:'Would a free device get you to buy a full set of flavors?',o:['Yes','Maybe','No']},
+  {k:'best',t:'Best blend you found',text:1},
+  {k:'worst',t:'Worst blend you found',text:1},
+  {k:'missing',t:'A flavor we should add',text:1},
+  {k:'drop',t:'A flavor we should drop',text:1},
+  {k:'change',t:'If you could change one thing about the whole experience',area:1,req:1}
+];
+
+/* ---------- boot ---------- */
+async function boot(){
+  if(location.hash==='#results'){S.mode='admin';render();return}
+  if(S.token){try{await loadState();S.mode='app'}catch(e){if(e.code==='28000'){store.del(LS);S.token=null;S.mode='gate'}else{S.mode='gate';S.problem='Couldn\u2019t reach the server. Check your connection and reload.'}}}
+  else S.mode='gate';
+  render();
+}
+async function loadState(){
+  const st=await rpc('tasting_state',{p_token:S.token});
+  applyPayload(st.payload);S.me=st.me;S.coverage=st.coverage||{};S.testers=st.testers;S.hw=st.hw;
+  S.scores=(st.scores||[]).map(s=>({...s.data,type:s.type,a:s.a,b:s.b,pair:s.type==='blend'?s.item:null}));
+}
+document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&S.mode==='app'&&!S.form){try{await loadState();render()}catch(e){}}});
+
+const mySingle=id=>S.scores.find(s=>s.type==='single'&&s.a===id);
+const myBlend=k=>S.scores.find(s=>s.type==='blend'&&s.pair===k);
+function avg(a){a=a.filter(x=>typeof x==='number');return a.length?a.reduce((x,y)=>x+y,0)/a.length:null}
+const f1=x=>x==null?'—':x.toFixed(1);
+
+/* ---------- render ---------- */
+function render(){
+  const nav=document.getElementById('nav'),m=document.getElementById('main');
+  if(S.mode==='admin'){nav.innerHTML='';m.innerHTML=S.adminData?resultsView():adminGate();return}
+  if(S.mode!=='app'){nav.innerHTML='';m.innerHTML=(S.problem?`<div class="banner">${esc(S.problem)}</div>`:'')+(S.mode==='gate'?gateView():S.mode==='join'?joinView():'<p class="muted">Loading…</p>');return}
+  const tabs=[['list','Your list'],['map','Blend map'],['how','How to use it'],['device','Device report']];
+  nav.innerHTML=tabs.map(([v,l])=>`<button data-view="${v}" ${S.view===v&&!S.form?'aria-current="page"':''}>${l}</button>`).join('');
+  let h=S.problem?`<div class="banner">${esc(S.problem)}</div>`:'';
+  if(S.msg)h+=`<p class="ok">${esc(S.msg)}</p>`;
+  if(S.form)h+=formView();
+  else if(S.view==='how')h+=S.payload.howto||'';
+  else if(S.view==='map')h+=mapView(S.coverage,null,true);
+  else if(S.view==='device')h+=deviceIntro();
+  else h+=listView();
+  m.innerHTML=h;
+}
+function gateView(){
+  return `<div class="gate"><h2>Enter your access code</h2><p class="muted">It came with your R&amp;D kit.</p>
+  <input type="text" id="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" aria-label="Access code">
+  <div class="actions"><button class="btn" data-act="code">Continue</button><span class="err" id="ferr" role="alert"></span></div></div>`;
+}
+function joinView(){
+  return `<div class="form" id="joinform">
+  <h2>Join the panel</h2>
+  <p class="muted">Takes a minute. You'll get your own list of blends — the panel splits all ${PAIRS.length} between everyone so no one has to taste them all. This device will remember you.</p>
+  ${qHTML({k:'name',t:'Your first name',text:1,req:1})}
+  ${qHTML({k:'freq',t:'How often do you consume cannabis?',o:['A few times a month','Weekly','Daily','Several times a day'],req:1,help:'A daily user and an occasional one score the same cart differently. This lets us correct for it.'})}
+  ${qHTML({k:'format',t:'What do you usually reach for?',o:['510 carts','Disposables / AIO','Flower','Concentrates','Edibles'],req:1})}
+  ${qHTML({k:'fruit',t:'How do you feel about fruit flavors generally?',o:['Love them','They\u2019re fine','Not my thing']})}
+  <div class="actions"><button class="btn" data-act="join">Get my list</button><span class="err" id="ferr" role="alert"></span></div></div>`;
+}
+function listView(){
+  const sDone=F.filter(f=>mySingle(f.id)).length;
+  const aDone=ANCHORS.filter(k=>myBlend(k)).length;
+  const assigned=S.me.assigned||[];
+  const bDone=assigned.filter(k=>myBlend(k)).length;
+  const extras=S.scores.filter(s=>s.type==='blend'&&!assigned.includes(s.pair)&&!ANCHORS.includes(s.pair)).length;
+  const singleTiles=F.map(f=>{const s=mySingle(f.id);return `<button class="tile ${s?'done':''}" data-act="single" data-a="${f.id}">${dots([f.id])}${esc(f.n)}${s?`<span class="sc">${s.overall}/10</span>`:''}</button>`}).join('');
+  const pairTile=k=>{const s=myBlend(k);return `<button class="tile ${s?'done':''}" data-act="blend" data-k="${k}">${dots(k.split('+'))}${esc(pairName(k))}${s?`<span class="sc">${s.overall}/10</span>`:''}</button>`};
+  return `
+  <h2>Hi ${esc(S.me.name)}</h2>
+  <div class="prog">
+    <div><b>${sDone}/${F.length}</b><span>flavors alone</span></div>
+    <div><b>${aDone}/${ANCHORS.length}</b><span>calibration blends</span></div>
+    <div><b>${bDone}/${assigned.length}</b><span>your blends</span></div>
+    <div><b>${extras}</b><span>bonus blends</span></div>
+    <div><b>${S.hw?'Done':'—'}</b><span>device report</span></div>
+  </div>
+  <div class="step"><div class="num">1</div><div>
+    <h3>Taste each flavor on its own</h3>
+    <p class="meta">Do this before blending. A blend score means nothing without knowing what each half tastes like alone. Set the bottom switch to L or R, one cart.</p>
+    <div class="grid">${singleTiles}</div></div></div>
+  <div class="step"><div class="num">2</div><div>
+    <h3>Calibration blends</h3>
+    <p class="meta">Everyone on the panel scores these same ones. It's how we tell a tough grader from a bad blend.</p>
+    <div class="grid">${ANCHORS.map(pairTile).join('')}</div></div></div>
+  <div class="step"><div class="num">3</div><div>
+    <h3>Your assigned blends</h3>
+    <p class="meta">Picked so the whole panel covers every blend between you. Two blends per sitting, max.</p>
+    <div class="grid">${assigned.map(pairTile).join('')}</div>
+    <p class="meta" style="margin-top:14px">Want to try something else? Any square on the <button class="btn ghost" data-view="map" style="padding:4px 12px">blend map</button> can be scored.</p></div></div>
+  <div class="step"><div class="num">4</div><div>
+    <h3>Device report</h3>
+    <p class="meta">Fill in once you've lived with the device for a few days. You can come back and update it.</p>
+    <button class="btn ${S.hw?'ghost':''}" data-act="hw">${S.hw?'Update my device report':'Start device report'}</button></div></div>`;
+}
+function deviceIntro(){
+  return `<h2>Device report</h2><p>One per person, about the device and the carts as hardware — not the flavors. Best done after a few days of use.</p>
+  <button class="btn" data-act="hw">${S.hw?'Update my device report':'Start device report'}</button>`;
+}
+// cov: {item:count}; avgs: {item:avg}|null ; clickable: testers can open forms
+function mapView(cov,avgs,clickable){
+  let rows='';
+  F.forEach((r,i)=>{
+    rows+=`<tr><th class="row">${dots([r.id])} ${esc(r.n)}</th>`;
+    F.forEach((c,j)=>{
+      if(j>i){rows+='<td class="empty"></td>';return}
+      const isS=i===j,k=isS?'s:'+r.id:key(r.id,c.id),n=cov[k]||0,a=avgs?avgs[k]:null;
+      const bg=a!=null?`background:rgba(78,254,255,${(0.08+0.6*(a-1)/9).toFixed(2)})`:(!avgs&&n&&!isS)?`background:rgba(78,254,255,${Math.min(.12*n,.5)})`:'';
+      const lab=a!=null?a.toFixed(1):(n||'');
+      const act=clickable?(isS?`data-act="single" data-a="${r.id}"`:`data-act="blend" data-k="${k}"`):'';
+      rows+=`<td><button class="${isS?'single':''} ${ANCHORS.includes(k)?'anchor':''}" style="${bg}" ${act} title="${esc(isS?r.n+' alone':pairName(k))} — ${n} score(s)">${lab}</button></td>`;
+    });
+    rows+='</tr>';
+  });
+  const head='<tr><th></th>'+F.map(f=>`<th class="col">${esc(f.n)}</th>`).join('')+'</tr>';
+  const covered=PAIRS.filter(k=>cov[k]).length;
+  return `<h2>Blend map</h2>
+  <p>Every square is one of the ${PAIRS.length} blends${clickable?'. Tap any square to score it':''}. ${covered} of ${PAIRS.length} have been tasted so far.</p>
+  <div class="mxwrap"><table class="mx">${head}${rows}</table></div>
+  <div class="legend"><span><i style="background:rgba(78,254,255,.4)"></i>${avgs?'Brighter = higher average score (number shown)':'Brighter = scored more often'}</span><span><i style="border-color:var(--pk)"></i>Calibration blend</span><span><i style="border-style:dashed"></i>Flavor alone</span></div>
+  ${clickable?'<p class="muted" style="margin-top:14px">Scores stay hidden until the panel wraps up, so nobody\u2019s ratings lean on anyone else\u2019s.</p>':''}`;
+}
+
+/* ---------- forms ---------- */
+function qHTML(q,val){
+  if(q.sec)return `<h3 style="margin:22px 0 4px">${esc(q.sec)}</h3>`;
+  const lab=`<span class="ql">${esc(q.t)}${q.req?'<span class="req" aria-hidden="true">*</span>':''}${q.help?`<small>${esc(q.help)}</small>`:''}</span>`;
+  if(q.text)return `<div class="q"><label>${lab}<input type="text" name="${q.k}" value="${esc(val||'')}" maxlength="200"></label></div>`;
+  if(q.area)return `<div class="q"><label>${lab}<textarea name="${q.k}" maxlength="2000">${esc(val||'')}</textarea></label></div>`;
+  const type=q.multi?'checkbox':'radio';
+  const opts=q.o.map((o,i)=>{const v=q.vals?q.vals[i]:o;const chk=q.multi?(Array.isArray(val)&&val.includes(v)):(val===v);
+    return `<label class="chip"><input type="${type}" name="${q.k}" value="${esc(v)}" ${chk?'checked':''}><span>${esc(o)}</span></label>`}).join('');
+  const ends=(q.lo||q.hi)?`<div class="ends"><span>${esc(q.lo||'')}</span><span>${esc(q.hi||'')}</span></div>`:'';
+  return `<fieldset class="q" style="border:0;margin:0;padding-left:0;padding-right:0"><legend style="padding:0">${lab}</legend><div class="chips">${opts}</div>${ends}</fieldset>`;
+}
+function readForm(el,qs){
+  const out={},missing=[];
+  qs.forEach(q=>{
+    if(q.sec)return;
+    if(q.text||q.area){const v=el.querySelector(`[name="${q.k}"]`).value.trim();if(v)out[q.k]=v;else if(q.req)missing.push(q.t);return}
+    const ins=[...el.querySelectorAll(`[name="${q.k}"]`)];
+    const conv=v=>{const n=Number(v);return(q.vals||typeof (q.o&&q.o[0])==='number')&&!isNaN(n)?n:v};
+    if(q.multi){const v=ins.filter(i=>i.checked).map(i=>i.value);if(v.length)out[q.k]=v;else if(q.req)missing.push(q.t);return}
+    const c=ins.find(i=>i.checked);if(c)out[q.k]=conv(c.value);else if(q.req)missing.push(q.t);
+  });
+  return {out,missing};
+}
+function formView(){
+  const f=S.form;let title,sub,qs,prev;
+  if(f.type==='single'){qs=SINGLE_Q;prev=mySingle(f.a);title=nm(f.a);sub='On its own. Bottom switch on L or R.';}
+  else if(f.type==='blend'){
+    const [a,b]=f.k.split('+');qs=blendQ(a,b);prev=myBlend(f.k);title=pairName(f.k);
+    sub=(ANCHORS.includes(f.k)?'Calibration blend. ':'')+'Bottom switch on L+R, one flavor in each side.';
+    const ms=[a,b].filter(x=>!mySingle(x));
+    if(ms.length)sub+=` Heads up: you haven't scored ${ms.map(nm).join(' or ')} alone yet.`;
+  }else{qs=HW_Q;prev=S.hw;title='Device report';sub='About the device and carts as hardware.';}
+  f.qs=qs;
+  const ids=f.type==='single'?[f.a]:f.type==='blend'?f.k.split('+'):[];
+  return `<div class="form" id="sform">
+   <div class="formhead">${ids.length?dots(ids):''}<h2 style="margin:0">${esc(title)}</h2></div>
+   <p class="muted">${esc(sub)}${prev?' You scored this before — saving replaces your earlier answers.':''}</p>
+   ${qs.map(q=>qHTML(q,prev?prev[q.k]:undefined)).join('')}
+   <div class="actions"><button class="btn" data-act="save">${f.type==='hw'?'Save device report':'Save score'}</button>
+   <button class="btn ghost" data-act="cancel">Cancel</button><span class="err" id="ferr" role="alert"></span></div></div>`;
+}
+
+/* ---------- actions ---------- */
+const errMsg=e=>e.code==='28000'?'That code didn\u2019t work.':e.status?'Couldn\u2019t save ('+esc(e.message)+'). Try again.':'Couldn\u2019t reach the server. Check your connection and try again.';
+async function submitCode(){
+  const v=document.getElementById('code').value.trim(),er=document.getElementById('ferr');
+  if(!v){er.textContent='Enter the code from your kit.';return}
+  try{applyPayload(await rpc('tasting_config',{p_code:v}));S.code=v;S.mode='join';S.problem=null;render()}
+  catch(e){er.textContent=errMsg(e)}
+}
+async function join(){
+  const el=document.getElementById('joinform'),er=document.getElementById('ferr');
+  const {out,missing}=readForm(el,[{k:'name',text:1,req:1,t:'Name'},{k:'freq',o:[''],req:1,t:'How often'},{k:'format',o:[''],req:1,t:'Usual product'},{k:'fruit',o:[''],t:'Fruit'}]);
+  if(missing.length){er.textContent='Still needed: '+missing.join(', ');return}
+  const btn=el.querySelector('[data-act="join"]');btn.disabled=true;
+  try{
+    const r=await rpc('tasting_join',{p_code:S.code,p_name:out.name,p_freq:out.freq,p_format:out.format,p_fruit:out.fruit||null});
+    S.token=r.token;store.set(LS,r.token);await loadState();S.mode='app';S.view='list';render();window.scrollTo(0,0);
+  }catch(e){btn.disabled=false;er.textContent=errMsg(e)}
+}
+async function save(){
+  const el=document.getElementById('sform'),f=S.form,er=document.getElementById('ferr');
+  const {out,missing}=readForm(el,f.qs);
+  if(missing.length){er.textContent='Still needed: '+missing.join(', ');return}
+  const btn=el.querySelector('[data-act="save"]');btn.disabled=true;er.textContent='Saving…';
+  try{
+    if(f.type==='hw'){await rpc('tasting_save_hw',{p_token:S.token,p_data:out});S.msg='Device report saved. Thank you.';}
+    else{const [a,b]=f.type==='single'?[f.a,null]:f.k.split('+');
+      await rpc('tasting_save_score',{p_token:S.token,p_type:f.type,p_a:a,p_b:b,p_data:out});
+      S.msg='Saved: '+(f.type==='single'?nm(f.a):pairName(f.k))+'.';}
+    S.form=null;await loadState().catch(()=>{});render();window.scrollTo(0,0);
+  }catch(e){btn.disabled=false;er.textContent=errMsg(e)}
+}
+function openForm(spec){S.msg=null;S.form=spec;render();window.scrollTo(0,0)}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-view],[data-act]');if(!t)return;
+  if(t.dataset.view){S.view=t.dataset.view;S.form=null;S.msg=null;render();return}
+  const a=t.dataset.act;
+  if(a==='single')openForm({type:'single',a:t.dataset.a});
+  else if(a==='blend')openForm({type:'blend',k:t.dataset.k});
+  else if(a==='hw')openForm({type:'hw'});
+  else if(a==='save')save();
+  else if(a==='cancel'){S.form=null;render()}
+  else if(a==='join')join();
+  else if(a==='code')submitCode();
+  else if(a==='admin')adminLogin();
+  else if(a==='csv')exportCSV();
+  else if(a==='refresh')adminLogin(true);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='code')submitCode();if(e.key==='Enter'&&e.target.id==='admincode')adminLogin()});
+
+/* ---------- admin results ---------- */
+function adminGate(){
+  return `<div class="gate"><h2>Results</h2><p class="muted">Enter the admin code.</p>
+  <input type="password" id="admincode" autocomplete="off" aria-label="Admin code">
+  <div class="actions"><button class="btn" data-act="admin">Show results</button><span class="err" id="ferr" role="alert"></span></div></div>`;
+}
+async function adminLogin(refresh){
+  const v=refresh?S.admin:document.getElementById('admincode').value.trim();
+  try{const d=await rpc('tasting_results',{p_admin:v});S.admin=v;applyPayload(d.payload);
+    const tm=Object.fromEntries(d.testers.map(t=>[t.id,t]));
+    d.flat=d.scores.map(s=>({...s.data,uid:s.tester_id,name:(tm[s.tester_id]||{}).name,freq:(tm[s.tester_id]||{}).freq,type:s.type,a:s.a,b:s.b,pair:s.type==='blend'?s.item:null,anchor:ANCHORS.includes(s.item),ts:s.updated_at}));
+    d.hwFlat=d.hw.map(h=>({...h.data,name:(tm[h.tester_id]||{}).name}));
+    S.adminData=d;render();
+  }catch(e){const er=document.getElementById('ferr');if(er)er.textContent=errMsg(e)}
+}
+function resultsView(){
+  const d=S.adminData,all=d.flat,blends=all.filter(s=>s.type==='blend'),singles=all.filter(s=>s.type==='single'),testers=d.testers,hws=d.hwFlat;
+  const by=(arr,kf)=>{const m={};arr.forEach(s=>{(m[kf(s)]=m[kf(s)]||[]).push(s)});return m};
+  const pct=(arr,k,v)=>arr.length?Math.round(100*arr.filter(s=>s[k]===v).length/arr.length):0;
+  const anchorMean={};ANCHORS.forEach(k=>anchorMean[k]=avg(blends.filter(s=>s.pair===k).map(s=>s.overall)));
+  const cal=testers.map(t=>{const mine=blends.filter(s=>s.uid===t.id&&s.anchor);const dd=avg(mine.map(s=>s.overall-anchorMean[s.pair]));return{t,n:mine.length,d:dd}});
+  const offset=Object.fromEntries(cal.filter(c=>c.n>=2&&c.d!=null).map(c=>[c.t.id,c.d]));
+  const adj=s=>s.overall-(offset[s.uid]||0);
+  const bp=by(blends,s=>s.pair);
+  const brow=Object.entries(bp).map(([k,a])=>({k,n:a.length,raw:avg(a.map(s=>s.overall)),adj:avg(a.map(adj)),buy:pct(a,'buy','Yes'),harm:avg(a.map(s=>s.harmony)),
+    lead:avg(a.map(s=>s.lead)),terpHi:a.filter(s=>/high|much/.test(s.terp||'')).length,terpLo:a.filter(s=>/low|little/.test(s.terp||'')).length,
+    names:a.map(s=>s.blendName).filter(Boolean)})).sort((x,y)=>y.adj-x.adj);
+  const sp=by(singles,s=>s.a);
+  const TL=['Way too little','A bit low','Right','A bit high','Way too much'];
+  const srow=F.map(f=>{const a=sp[f.id]||[];return{f,n:a.length,raw:avg(a.map(s=>s.overall)),adj:avg(a.map(adj)),acc:avg(a.map(s=>s.accuracy)),nat:avg(a.map(s=>s.natural)),harsh:avg(a.map(s=>s.harsh)),
+    terp:TL.map(v=>a.filter(s=>s.terp===v).length),buy:pct(a,'buy','Yes')}}).sort((x,y)=>(y.adj??-1)-(x.adj??-1));
+  const issues={};all.forEach(s=>(s.issues||[]).filter(i=>i!=='None').forEach(i=>{const fl=s.type==='single'?nm(s.a):pairName(s.pair);(issues[i]=issues[i]||{});issues[i][fl]=(issues[i][fl]||0)+1}));
+  const cov={},sums={};all.forEach(s=>{const k=s.type==='single'?'s:'+s.a:s.pair;cov[k]=(cov[k]||0)+1;(sums[k]=sums[k]||[]).push(adj(s))});
+  const avgs=Object.fromEntries(Object.entries(sums).map(([k,v])=>[k,avg(v)]));
+  const covered=Object.keys(bp).length;
+  const terpCell=t=>t.map((n,i)=>`<span title="${TL[i]}" style="display:inline-block;min-width:18px;text-align:center;${i===2?'color:var(--cy)':''}">${n}</span>`).join('');
+  const brTable=rows=>`<div class="tbl"><table class="rt"><tr><th>Blend</th><th>n</th><th>Score</th><th>Adjusted</th><th>Buy yes</th><th>Harmony</th><th>Leans</th><th>Terps hi/lo</th><th>Names suggested</th></tr>
+   ${rows.map(r=>{const [a,b]=r.k.split('+');const lean=r.lead==null?'—':Math.abs(r.lead)<.5?'even':(r.lead<0?nm(a):nm(b));
+   return `<tr><td>${dots([a,b])} ${esc(pairName(r.k))}${ANCHORS.includes(r.k)?' <span class="muted">(cal)</span>':''}</td><td class="n">${r.n}</td><td class="n">${f1(r.raw)}</td><td class="n"><b>${f1(r.adj)}</b></td><td class="n">${r.buy}%</td><td class="n">${f1(r.harm)}</td><td>${esc(lean)}</td><td class="n">${r.terpHi}/${r.terpLo}</td><td>${esc(r.names.join(', '))}</td></tr>`}).join('')}</table></div>`;
+  const hwSum=HW_Q.filter(q=>q.o&&!q.sec).map(q=>{const c={};hws.forEach(h=>{const v=h[q.k];if(v!=null)c[v]=(c[v]||0)+1});
+    return `<tr><td>${esc(q.t)}</td><td>${Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([v,n])=>`${esc(v)} <b>${n}</b>`).join(' · ')||'—'}</td></tr>`}).join('');
+  const hwText=['clicksNote','best','worst','missing','drop','change'].map(k=>{const q=HW_Q.find(x=>x.k===k);const vals=hws.filter(h=>h[k]).map(h=>`<li>${esc(h[k])} <span class="muted">— ${esc(h.name)}</span></li>`).join('');return vals?`<h3 style="margin:16px 0 6px;font-size:16px">${esc(q.t)}</h3><ul>${vals}</ul>`:''}).join('');
+  return `<h2>Results</h2>
+  <p class="muted">“Adjusted” removes each tester's lean, measured against the panel on the calibration blends (applied once they've scored at least two).</p>
+  <div class="prog"><div><b>${testers.length}</b><span>testers</span></div><div><b>${covered}/${PAIRS.length}</b><span>blends tasted</span></div><div><b>${blends.length}</b><span>blend scores</span></div><div><b>${singles.length}</b><span>single scores</span></div><div><b>${hws.length}</b><span>device reports</span></div></div>
+  <div class="actions"><button class="btn ghost" data-act="refresh">Refresh</button><button class="btn ghost" data-act="csv">Download all scores (CSV)</button></div>
+  <div class="rsec">${mapView(cov,avgs,false)}</div>
+  <div class="rsec"><h3>Flavors alone</h3><div class="tbl"><table class="rt"><tr><th>Flavor</th><th>n</th><th>Score</th><th>Adjusted</th><th>True to name</th><th>Real fruit</th><th>Harsh</th><th>Terps: too little → too much</th><th>Buy yes</th></tr>
+   ${srow.map(r=>`<tr><td>${dots([r.f.id])} ${esc(r.f.n)}</td><td class="n">${r.n}</td><td class="n">${f1(r.raw)}</td><td class="n"><b>${f1(r.adj)}</b></td><td class="n">${f1(r.acc)}</td><td class="n">${f1(r.nat)}</td><td class="n">${f1(r.harsh)}</td><td>${terpCell(r.terp)}</td><td class="n">${r.buy}%</td></tr>`).join('')}</table></div></div>
+  <div class="rsec"><h3>Top blends</h3>${brow.length?brTable(brow.slice(0,12)):'<p class="muted">No blend scores yet.</p>'}</div>
+  ${brow.length>12?`<div class="rsec"><h3>Weakest blends</h3>${brTable(brow.slice(-6).reverse())}</div>`:''}
+  <div class="rsec"><h3>Tester calibration</h3><div class="tbl"><table class="rt"><tr><th>Tester</th><th>Use</th><th>Calibration blends</th><th>Lean vs. panel</th><th>Blends done</th></tr>
+   ${cal.map(c=>`<tr><td>${esc(c.t.name)}</td><td>${esc(c.t.freq)}</td><td class="n">${c.n}/${ANCHORS.length}</td><td class="n">${c.d==null?'—':(c.d>0?'+':'')+c.d.toFixed(1)}</td><td class="n">${blends.filter(s=>s.uid===c.t.id).length}</td></tr>`).join('')}</table></div></div>
+  <div class="rsec"><h3>Hardware issues logged</h3>${Object.keys(issues).length?`<div class="tbl"><table class="rt"><tr><th>Issue</th><th>Where</th></tr>${Object.entries(issues).map(([i,m])=>`<tr><td>${esc(i)}</td><td>${Object.entries(m).map(([fl,n])=>`${esc(fl)} <b>${n}</b>`).join(' · ')}</td></tr>`).join('')}</table></div>`:'<p class="muted">None so far.</p>'}</div>
+  <div class="rsec"><h3>Device reports</h3>${hws.length?`<div class="tbl"><table class="rt">${hwSum}</table></div>${hwText}`:'<p class="muted">None yet.</p>'}</div>`;
+}
+function exportCSV(){
+  const cols=['type','name','freq','a','b','pair','anchor','palate','voltage','preheat','accuracy','intensity','sweetness','harsh','after','terp','natural','lead','harmony','overall','buy','blendName','pairIdea','issues','notes','ts'];
+  const q=v=>{v=Array.isArray(v)?v.join('; '):v;v=v==null?'':String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  const csv=[cols.join(','),...S.adminData.flat.map(s=>cols.map(c=>q(s[c])).join(','))].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='tasting-scores.csv';document.body.appendChild(a);a.click();a.remove();
+}
+window.addEventListener('hashchange',()=>location.reload());
+boot();
+</script>
+</body>
+</html>
