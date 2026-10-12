@@ -243,7 +243,7 @@ const f1=x=>x==null?'—':x.toFixed(1);
 function render(){
   const nav=document.getElementById('nav'),m=document.getElementById('main');
   if(S.mode==='admin'){nav.innerHTML='';m.innerHTML=S.adminData?resultsView():adminGate();return}
-  if(S.mode!=='app'){nav.innerHTML='';m.innerHTML=(S.problem?`<div class="banner">${esc(S.problem)}</div>`:'')+(S.mode==='gate'?gateView():S.mode==='join'?joinView():'<p class="muted">Loading…</p>');return}
+  if(S.mode!=='app'){nav.innerHTML='';m.innerHTML=(S.problem?`<div class="banner">${esc(S.problem)}</div>`:'')+(S.mode==='gate'?gateView():S.mode==='join'?joinView():S.mode==='rejoin'?rejoinView():'<p class="muted">Loading…</p>');return}
   const tabs=[['list','Your list'],['map','Blend map'],['how','How to use it'],['device','Device report']];
   nav.innerHTML=tabs.map(([v,l])=>`<button data-view="${v}" ${S.view===v&&!S.form?'aria-current="page"':''}>${l}</button>`).join('');
   let h=S.problem?`<div class="banner">${esc(S.problem)}</div>`:'';
@@ -264,11 +264,17 @@ function joinView(){
   return `<div class="form" id="joinform">
   <h2>Join the panel</h2>
   <p class="muted">Takes a minute. You'll get your own list of blends — the panel splits all ${PAIRS.length} between everyone so no one has to taste them all. This device will remember you.</p>
-  ${qHTML({k:'name',t:'Your first name',text:1,req:1})}
+  ${qHTML({k:'name',t:'Your first name',text:1,req:1,help:'Use the same name every time. It\u2019s how you get back in if your phone forgets you.'})}
   ${qHTML({k:'freq',t:'How often do you consume cannabis?',o:['A few times a month','Weekly','Daily','Several times a day'],req:1,help:'A daily user and an occasional one score the same cart differently. This lets us correct for it.'})}
   ${qHTML({k:'format',t:'What do you usually reach for?',o:['510 carts','Disposables / AIO','Flower','Concentrates','Edibles'],req:1})}
   ${qHTML({k:'fruit',t:'How do you feel about fruit flavors generally?',o:['Love them','They\u2019re fine','Not my thing']})}
-  <div class="actions"><button class="btn" data-act="join">Get my list</button><span class="err" id="ferr" role="alert"></span></div></div>`;
+  <div class="actions"><button class="btn" data-act="join">Get my list</button><span class="err" id="ferr" role="alert"></span></div>
+  <p class="muted" style="margin-top:22px">Joined before on this or another phone? <button class="btn ghost" data-act="showrejoin" style="padding:4px 12px">I\u2019ve already joined</button></p></div>`;
+}
+function rejoinView(){
+  return `<div class="gate"><h2>Welcome back</h2><p class="muted">Enter the name you joined with. Your list and scores will come right back.</p>
+  <input type="text" id="rname" autocomplete="off" spellcheck="false" maxlength="40" aria-label="Your name" style="text-transform:none;letter-spacing:0">
+  <div class="actions"><button class="btn" data-act="rejoin">Continue</button><button class="btn ghost" data-act="showjoin">I\u2019m new</button><span class="err" id="ferr" role="alert"></span></div></div>`;
 }
 function listView(){
   const sDone=F.filter(f=>mySingle(f.id)).length;
@@ -377,11 +383,17 @@ function formView(){
 }
 
 /* ---------- actions ---------- */
-const errMsg=e=>e.code==='28000'?'That code didn\u2019t work.':e.status?'Couldn\u2019t save ('+esc(e.message)+'). Try again.':'Couldn\u2019t reach the server. Check your connection and try again.';
+const errMsg=e=>e.code==='28000'?'That code didn\u2019t work.':e.code==='P0002'?'Someone already joined with that name. If that\u2019s you, tap \u201cI\u2019ve already joined\u201d below. If not, add your last initial.':e.code==='P0003'?'No one has joined with that name. Check the spelling, or go back and join as new.':e.status?'Couldn\u2019t save ('+esc(e.message)+'). Try again.':'Couldn\u2019t reach the server. Check your connection and try again.';
 async function submitCode(){
   const v=document.getElementById('code').value.trim(),er=document.getElementById('ferr');
   if(!v){er.textContent='Enter the code from your kit.';return}
   try{applyPayload(await rpc('tasting_config',{p_code:v}));S.code=v;S.mode='join';S.problem=null;render()}
+  catch(e){er.textContent=errMsg(e)}
+}
+async function rejoin(){
+  const v=document.getElementById('rname').value.trim(),er=document.getElementById('ferr');
+  if(!v){er.textContent='Enter the name you joined with.';return}
+  try{const r=await rpc('tasting_rejoin',{p_code:S.code,p_name:v});S.token=r.token;store.set(LS,r.token);await loadState();S.mode='app';S.view='list';S.msg='Welcome back.';render();window.scrollTo(0,0)}
   catch(e){er.textContent=errMsg(e)}
 }
 async function join(){
@@ -419,11 +431,14 @@ document.addEventListener('click',e=>{
   else if(a==='cancel'){S.form=null;render()}
   else if(a==='join')join();
   else if(a==='code')submitCode();
+  else if(a==='rejoin')rejoin();
+  else if(a==='showrejoin'){S.mode='rejoin';render()}
+  else if(a==='showjoin'){S.mode='join';render()}
   else if(a==='admin')adminLogin();
   else if(a==='csv')exportCSV();
   else if(a==='refresh')adminLogin(true);
 });
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='code')submitCode();if(e.key==='Enter'&&e.target.id==='admincode')adminLogin()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='code')submitCode();if(e.key==='Enter'&&e.target.id==='rname')rejoin();if(e.key==='Enter'&&e.target.id==='admincode')adminLogin()});
 
 /* ---------- admin results ---------- */
 function adminGate(){
